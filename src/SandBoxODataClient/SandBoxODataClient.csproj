@@ -16,12 +16,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.OData.Client" Version="7.12.5" />
+	<!--PackageReference Include="Microsoft.OData.Client" Version="7.12.5" />
     <PackageReference Include="Microsoft.OData.Core" Version="7.12.5" />
     <PackageReference Include="Microsoft.OData.Edm" Version="7.12.5" />
-    <PackageReference Include="Microsoft.Spatial" Version="7.12.5" />
+    <PackageReference Include="Microsoft.Spatial" Version="7.12.5" /-->
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Text.Json" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\submodules\odata.net\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
+    <ProjectReference Include="..\..\submodules\odata.net\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+    <ProjectReference Include="..\..\submodules\odata.net\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+    <ProjectReference Include="..\..\submodules\odata.net\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
   </ItemGroup>
 
 </Project>

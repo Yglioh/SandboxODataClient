@@ -9,6 +9,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft", "Microsoft", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBoxODataClient", "src\SandBoxODataClient\SandBoxODataClient.csproj", "{395FF53E-9F39-4960-BB56-18D60227DBCE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client", "submodules\odata.net\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj", "{E1A4E1FC-F751-4B83-803A-7A69E0A1A8F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Core", "submodules\odata.net\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj", "{D0C9DFF3-62A9-430C-BBEE-F8A575F0F49C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Edm", "submodules\odata.net\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj", "{11A456D4-889B-48FA-98D4-71CC9C096489}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Spatial", "submodules\odata.net\src\Microsoft.Spatial\Microsoft.Spatial.csproj", "{E0C7E735-4F0D-4101-86B1-B1AA45965DA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,12 +27,32 @@ Global
 		{395FF53E-9F39-4960-BB56-18D60227DBCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{395FF53E-9F39-4960-BB56-18D60227DBCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{395FF53E-9F39-4960-BB56-18D60227DBCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1A4E1FC-F751-4B83-803A-7A69E0A1A8F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1A4E1FC-F751-4B83-803A-7A69E0A1A8F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1A4E1FC-F751-4B83-803A-7A69E0A1A8F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1A4E1FC-F751-4B83-803A-7A69E0A1A8F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0C9DFF3-62A9-430C-BBEE-F8A575F0F49C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0C9DFF3-62A9-430C-BBEE-F8A575F0F49C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0C9DFF3-62A9-430C-BBEE-F8A575F0F49C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0C9DFF3-62A9-430C-BBEE-F8A575F0F49C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11A456D4-889B-48FA-98D4-71CC9C096489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11A456D4-889B-48FA-98D4-71CC9C096489}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11A456D4-889B-48FA-98D4-71CC9C096489}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11A456D4-889B-48FA-98D4-71CC9C096489}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0C7E735-4F0D-4101-86B1-B1AA45965DA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0C7E735-4F0D-4101-86B1-B1AA45965DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0C7E735-4F0D-4101-86B1-B1AA45965DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0C7E735-4F0D-4101-86B1-B1AA45965DA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{395FF53E-9F39-4960-BB56-18D60227DBCE} = {436DD20A-007E-4E15-8CD9-060918A229C7}
+		{E1A4E1FC-F751-4B83-803A-7A69E0A1A8F5} = {20B81013-37EF-46A7-9E34-349D4ABF2FD1}
+		{D0C9DFF3-62A9-430C-BBEE-F8A575F0F49C} = {20B81013-37EF-46A7-9E34-349D4ABF2FD1}
+		{11A456D4-889B-48FA-98D4-71CC9C096489} = {20B81013-37EF-46A7-9E34-349D4ABF2FD1}
+		{E0C7E735-4F0D-4101-86B1-B1AA45965DA3} = {20B81013-37EF-46A7-9E34-349D4ABF2FD1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {00BE641A-1851-471B-A934-FAD60179BCBC}
