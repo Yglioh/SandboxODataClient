@@ -17,9 +17,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Edm", "subm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Spatial", "submodules\odata.net\src\Microsoft.Spatial\Microsoft.Spatial.csproj", "{E0C7E735-4F0D-4101-86B1-B1AA45965DA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandboxODataConsole", "SandboxODataConsole\SandboxODataConsole.csproj", "{2F1ED2F1-7F33-4F76-85DD-DF6049A18DC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandboxODataConsole", "src\SandboxODataConsole\SandboxODataConsole.csproj", "{2F1ED2F1-7F33-4F76-85DD-DF6049A18DC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandboxODataTests", "SandboxODataTests\SandboxODataTests.csproj", "{24595D2C-9F1B-4B72-AB8B-7079358CAD53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandboxODataTests", "src\SandboxODataTests\SandboxODataTests.csproj", "{24595D2C-9F1B-4B72-AB8B-7079358CAD53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{47BAE357-BBE5-45DF-9911-1503E0EDE2F1}"
+	ProjectSection(SolutionItems) = preProject
+		patches\01.RemoveFramework45.patch = patches\01.RemoveFramework45.patch
+		patches\02.AddContentInspection.patch = patches\02.AddContentInspection.patch
+		patches\Apply.sh = patches\Apply.sh
+		patches\ReadMe.md = patches\ReadMe.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

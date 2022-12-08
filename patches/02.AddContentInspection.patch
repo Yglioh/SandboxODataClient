@@ -1,0 +1,66 @@
+From 2ca311a472f62491993355b5ffe533b9eca6e824 Mon Sep 17 00:00:00 2001
+From: Sven Vranckx <sven.vranckx@gmail.com>
+Date: Thu, 8 Dec 2022 20:40:54 +0100
+Subject: [PATCH] Add TenForce extensions
+
+- Inspect request content
+---
+ .../netstandard2.0/PublicAPI.Unshipped.txt    |  3 ++-
+ src/Microsoft.OData.Client/SaveResult.cs      |  4 ++++
+ .../TenForce/TenForceExtensions.cs            | 19 +++++++++++++++++++
+ 3 files changed, 25 insertions(+), 1 deletion(-)
+ create mode 100644 src/Microsoft.OData.Client/TenForce/TenForceExtensions.cs
+
+diff --git a/src/Microsoft.OData.Client/PublicAPI/netstandard2.0/PublicAPI.Unshipped.txt b/src/Microsoft.OData.Client/PublicAPI/netstandard2.0/PublicAPI.Unshipped.txt
+index 5f282702b..48462bc95 100644
+--- a/src/Microsoft.OData.Client/PublicAPI/netstandard2.0/PublicAPI.Unshipped.txt
++++ b/src/Microsoft.OData.Client/PublicAPI/netstandard2.0/PublicAPI.Unshipped.txt
+@@ -1 +1,2 @@
+-﻿
+\ No newline at end of file
++﻿Microsoft.OData.Client.IDataServiceContextEvents
++Microsoft.OData.Client.IDataServiceContextEvents.InspectContentStream(System.IO.Stream stream) -> void
+\ No newline at end of file
+diff --git a/src/Microsoft.OData.Client/SaveResult.cs b/src/Microsoft.OData.Client/SaveResult.cs
+index 89eceb6dd..d4c632070 100644
+--- a/src/Microsoft.OData.Client/SaveResult.cs
++++ b/src/Microsoft.OData.Client/SaveResult.cs
+@@ -150,6 +150,10 @@ namespace Microsoft.OData.Client
+                                 requestMessage.SetContentLengthHeader();
+                             }
+ 
++                            // TenForce -->
++                            RequestInfo.Context.InspectContentStream(contentStream.Stream);
++                            // <-- TenForce
++
+                             pereq.RequestContentStream = contentStream;
+                             asyncResult = BaseAsyncResult.InvokeAsync(requestMessage.BeginGetRequestStream, this.AsyncEndGetRequestStream, asyncStateBag);
+                         }
+diff --git a/src/Microsoft.OData.Client/TenForce/TenForceExtensions.cs b/src/Microsoft.OData.Client/TenForce/TenForceExtensions.cs
+new file mode 100644
+index 000000000..606070c9a
+--- /dev/null
++++ b/src/Microsoft.OData.Client/TenForce/TenForceExtensions.cs
+@@ -0,0 +1,19 @@
++﻿using System.IO;
++
++namespace Microsoft.OData.Client
++{
++    public interface IDataServiceContextEvents
++    {
++        void InspectContentStream(Stream stream);
++    }
++
++    internal static class TenForceExtensions
++    {
++        public static void InspectContentStream(this DataServiceContext context, Stream stream)
++        {
++            var events = context as IDataServiceContextEvents;
++            if (events != null)
++                events.InspectContentStream(stream);
++        }
++    }
++}
+-- 
+2.36.1.windows.1
+
