@@ -1,0 +1,736 @@
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="TF" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Attachment">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="File" Type="Edm.String" />
+        <Property Name="FileSize" Type="Edm.String" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="CreatedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="LastModifiedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Item" Type="TF.Item" />
+        <NavigationProperty Name="Creator" Type="TF.User" />
+        <NavigationProperty Name="LastModifier" Type="TF.User" />
+      </EntityType>
+      <EntityType Name="Concept">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Label" Type="Edm.String" Nullable="false" />
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="ItemType" Type="TF.ConceptType" />
+        <Property Name="CreatedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="LastModifiedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Workspace" Type="TF.Workspace" />
+        <NavigationProperty Name="DefaultChild" Type="TF.Concept" />
+        <NavigationProperty Name="Views" Type="Collection(TF.ConceptView)" />
+        <NavigationProperty Name="Fields" Type="Collection(TF.ConceptField)" />
+        <NavigationProperty Name="Creator" Type="TF.User" />
+        <NavigationProperty Name="LastModifier" Type="TF.User" />
+      </EntityType>
+      <EntityType Name="ConceptField">
+        <Key>
+          <PropertyRef Name="ConceptId" />
+          <PropertyRef Name="FieldDefinitionId" />
+        </Key>
+        <Property Name="ConceptId" Type="Edm.Int32" />
+        <Property Name="FieldDefinitionId" Type="Edm.String" />
+        <Property Name="IsRequired" Type="Edm.Boolean" Nullable="false" />
+        <NavigationProperty Name="Concept" Type="TF.Concept">
+          <ReferentialConstraint Property="ConceptId" ReferencedProperty="Id" />
+        </NavigationProperty>
+        <NavigationProperty Name="FieldDefinition" Type="TF.FieldDefinition">
+          <ReferentialConstraint Property="FieldDefinitionId" ReferencedProperty="Id" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="ConceptViewComponent">
+        <Key>
+          <PropertyRef Name="ConceptId" />
+          <PropertyRef Name="ViewCode" />
+          <PropertyRef Name="ComponentCode" />
+        </Key>
+        <Property Name="ConceptId" Type="Edm.Int32" />
+        <Property Name="ViewCode" Type="Edm.String" Nullable="false" />
+        <Property Name="ComponentCode" Type="Edm.String" Nullable="false" />
+        <Property Name="Label" Type="Edm.String" Nullable="false" />
+        <Property Name="PositionX" Type="Edm.Int32" Nullable="false" />
+        <Property Name="PositionY" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <NavigationProperty Name="Concept" Type="TF.Concept">
+          <ReferentialConstraint Property="ConceptId" ReferencedProperty="Id" />
+        </NavigationProperty>
+        <NavigationProperty Name="View" Type="TF.ConceptView" />
+      </EntityType>
+      <EntityType Name="ConceptView">
+        <Key>
+          <PropertyRef Name="ConceptId" />
+          <PropertyRef Name="Code" />
+        </Key>
+        <Property Name="ConceptId" Type="Edm.Int32" />
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Concept" Type="TF.Concept">
+          <ReferentialConstraint Property="ConceptId" ReferencedProperty="Id" />
+        </NavigationProperty>
+        <NavigationProperty Name="Components" Type="Collection(TF.ConceptViewComponent)" />
+      </EntityType>
+      <EntityType Name="FieldDefinition">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Label" Type="Edm.String" Nullable="false" />
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsFactoryDefault" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Id" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Group" Type="TF.FieldDefinitionGroup" />
+      </EntityType>
+      <EntityType Name="FieldDefinitionGroup">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Label" Type="Edm.String" Nullable="false" />
+        <Property Name="Code" Type="Edm.String" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="IsFactoryDefault" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Id" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="FieldDefinitions" Type="Collection(TF.FieldDefinition)" />
+      </EntityType>
+      <EntityType Name="Formula">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <Property Name="FormulaType" Type="TF.FormulaType" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Parameters" Type="Collection(TF.FormulaParameter)" ContainsTarget="true" />
+      </EntityType>
+      <EntityType Name="Function">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Label" Type="Edm.String" Nullable="false" />
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Item">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Number" Type="Edm.String" />
+        <Property Name="Label" Type="Edm.String" />
+        <Property Name="CreatedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="LastModifiedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Concept" Type="TF.Concept" />
+        <NavigationProperty Name="Fields" Type="Collection(TF.ItemField)" />
+        <NavigationProperty Name="Attachments" Type="Collection(TF.Attachment)" />
+        <NavigationProperty Name="Views" Type="Collection(TF.ItemView)" />
+        <NavigationProperty Name="Creator" Type="TF.User" />
+        <NavigationProperty Name="LastModifier" Type="TF.User" />
+      </EntityType>
+      <EntityType Name="ItemField">
+        <Key>
+          <PropertyRef Name="ItemId" />
+          <PropertyRef Name="FieldDefinitionId" />
+        </Key>
+        <Property Name="ItemId" Type="Edm.Int32" />
+        <Property Name="FieldDefinitionId" Type="Edm.String" />
+        <Property Name="UISettings" Type="TF.ItemFieldUISettings" />
+        <NavigationProperty Name="Item" Type="TF.Item">
+          <ReferentialConstraint Property="ItemId" ReferencedProperty="Id" />
+        </NavigationProperty>
+        <NavigationProperty Name="FieldDefinition" Type="TF.FieldDefinition">
+          <ReferentialConstraint Property="FieldDefinitionId" ReferencedProperty="Id" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="ItemViewComponent">
+        <Key>
+          <PropertyRef Name="ItemId" />
+          <PropertyRef Name="ViewCode" />
+          <PropertyRef Name="ComponentCode" />
+        </Key>
+        <Property Name="ItemId" Type="Edm.Int32" />
+        <Property Name="ViewCode" Type="Edm.String" Nullable="false" />
+        <Property Name="ComponentCode" Type="Edm.String" Nullable="false" />
+        <Property Name="IsShownAsReadOnly" Type="Edm.Boolean" Nullable="false" />
+        <NavigationProperty Name="Item" Type="TF.Item">
+          <ReferentialConstraint Property="ItemId" ReferencedProperty="Id" />
+        </NavigationProperty>
+        <NavigationProperty Name="View" Type="TF.ItemView" />
+        <NavigationProperty Name="ComponentDefinition" Type="TF.ConceptViewComponent" />
+      </EntityType>
+      <EntityType Name="ItemView">
+        <Key>
+          <PropertyRef Name="ItemId" />
+          <PropertyRef Name="Code" />
+        </Key>
+        <Property Name="ItemId" Type="Edm.Int32" />
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Item" Type="TF.Item">
+          <ReferentialConstraint Property="ItemId" ReferencedProperty="Id" />
+        </NavigationProperty>
+        <NavigationProperty Name="Components" Type="Collection(TF.ItemViewComponent)" />
+      </EntityType>
+      <EntityType Name="ItemStatus">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Label" Type="Edm.String" />
+        <Property Name="Code" Type="Edm.String" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Locale">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Code" Type="Edm.String" />
+        <Property Name="BaseLanguage" Type="Edm.String" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="Sequence" Type="Edm.Int32" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Option">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Label" Type="Edm.String" />
+        <Property Name="Code" Type="Edm.String" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="FieldDefinition" Type="TF.FieldDefinition" />
+      </EntityType>
+      <EntityType Name="OrganizationUnit">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Label" Type="Edm.String" Nullable="false" />
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <Property Name="Type" Type="TF.OrganizationUnitType" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsExternal" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsSelectableAsPerformedBy" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsSelectableAsPerformedFor" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Manager" Type="TF.User" />
+      </EntityType>
+      <EntityType Name="Shortcut">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <Property Name="Label" Type="Edm.String" Nullable="false" />
+        <Property Name="Url" Type="Edm.String" Nullable="false" />
+        <Property Name="ApplicationPart" Type="TF.ApplicationPart" Nullable="false" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Workspace" Type="TF.Workspace" />
+      </EntityType>
+      <EntityType Name="User">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="FirstName" Type="Edm.String" Nullable="false" />
+        <Property Name="LastName" Type="Edm.String" Nullable="false" />
+        <Property Name="Email" Type="Edm.String" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="AccountName" Type="Edm.String" />
+        <Property Name="ExternalAccountName" Type="Edm.String" />
+        <Property Name="IsTimeSheetUser" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="LastLoggedInOn" Type="Edm.DateTimeOffset" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="RegionalFormat" Type="TF.Locale" />
+        <NavigationProperty Name="Language" Type="TF.Locale" />
+        <NavigationProperty Name="OrganizationUnit" Type="TF.OrganizationUnit" />
+        <NavigationProperty Name="Function" Type="TF.Function" />
+      </EntityType>
+      <EntityType Name="UserGroup">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Label" Type="Edm.String" Nullable="false" />
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="CreatedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="LastModifiedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Template" Type="TF.UserGroup" />
+        <NavigationProperty Name="Users" Type="Collection(TF.User)" />
+        <NavigationProperty Name="Creator" Type="TF.User" />
+        <NavigationProperty Name="LastModifier" Type="TF.User" />
+      </EntityType>
+      <EntityType Name="Workspace">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Label" Type="Edm.String" Nullable="false" />
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="IsHidden" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="CreatedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="LastModifiedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Template" Type="TF.Workspace" />
+        <NavigationProperty Name="Instances" Type="Collection(TF.Workspace)" />
+        <NavigationProperty Name="Shortcuts" Type="Collection(TF.Shortcut)" />
+        <NavigationProperty Name="Concepts" Type="Collection(TF.Concept)" />
+        <NavigationProperty Name="Creator" Type="TF.User" />
+        <NavigationProperty Name="LastModifier" Type="TF.User" />
+      </EntityType>
+      <EntityType Name="TextConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="NumberConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.Decimal" Scale="Variable" />
+      </EntityType>
+      <EntityType Name="BoolConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.Boolean" />
+      </EntityType>
+      <EntityType Name="DateConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.DateTimeOffset" />
+      </EntityType>
+      <EntityType Name="TimeConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.TimeOfDay" />
+      </EntityType>
+      <EntityType Name="LocationConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="TF.Location" />
+      </EntityType>
+      <EntityType Name="AnswerConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="SignatureConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="ItemConceptField" BaseType="TF.ConceptField">
+        <NavigationProperty Name="DefaultValue" Type="TF.Item" />
+      </EntityType>
+      <EntityType Name="UserConceptField" BaseType="TF.ConceptField">
+        <NavigationProperty Name="DefaultValue" Type="TF.User" />
+      </EntityType>
+      <EntityType Name="OptionConceptField" BaseType="TF.ConceptField">
+        <NavigationProperty Name="DefaultValue" Type="TF.Option" />
+      </EntityType>
+      <EntityType Name="ItemsConceptField" BaseType="TF.ConceptField">
+        <NavigationProperty Name="DefaultValue" Type="Collection(TF.Item)" />
+      </EntityType>
+      <EntityType Name="UsersConceptField" BaseType="TF.ConceptField">
+        <NavigationProperty Name="DefaultValue" Type="Collection(TF.User)" />
+      </EntityType>
+      <EntityType Name="OptionsConceptField" BaseType="TF.ConceptField">
+        <NavigationProperty Name="DefaultValue" Type="Collection(TF.Option)" />
+      </EntityType>
+      <EntityType Name="CustomConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="DataListConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="GenericDataListConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="LongTextConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="BigTextConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="RtfTextConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="TitleConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="OptionBoxConceptField" BaseType="TF.ConceptField">
+        <NavigationProperty Name="DefaultValue" Type="TF.Option" />
+      </EntityType>
+      <EntityType Name="ToggleConceptField" BaseType="TF.ConceptField">
+        <NavigationProperty Name="DefaultValue" Type="TF.Option" />
+      </EntityType>
+      <EntityType Name="MapConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="DataGridConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="InformativeConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="ExplanatoryConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="TabConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.Boolean" />
+      </EntityType>
+      <EntityType Name="GroupingConceptField" BaseType="TF.ConceptField">
+        <Property Name="DefaultValue" Type="Edm.Boolean" />
+      </EntityType>
+      <EntityType Name="ButtonConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="ActionButtonConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="ChildItemsConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="ItemRelationConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="AttachmentConceptField" BaseType="TF.ConceptField" />
+      <EntityType Name="TextItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="NumberItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.Decimal" Scale="Variable" />
+      </EntityType>
+      <EntityType Name="BoolItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.Boolean" />
+      </EntityType>
+      <EntityType Name="DateItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.DateTimeOffset" />
+      </EntityType>
+      <EntityType Name="TimeItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.TimeOfDay" />
+      </EntityType>
+      <EntityType Name="LocationItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="TF.Location" />
+      </EntityType>
+      <EntityType Name="AnswerItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="SignatureItemField" BaseType="TF.ItemField" />
+      <EntityType Name="ItemSelectItemField" BaseType="TF.ItemField">
+        <NavigationProperty Name="Value" Type="TF.Item">
+          <ReferentialConstraint Property="ItemId" ReferencedProperty="Id" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="UserItemField" BaseType="TF.ItemField">
+        <NavigationProperty Name="Value" Type="TF.User" />
+      </EntityType>
+      <EntityType Name="OptionItemField" BaseType="TF.ItemField">
+        <NavigationProperty Name="Value" Type="TF.Option" ContainsTarget="true" />
+      </EntityType>
+      <EntityType Name="ItemMultiSelectItemField" BaseType="TF.ItemField">
+        <NavigationProperty Name="Value" Type="Collection(TF.Item)" />
+      </EntityType>
+      <EntityType Name="UsersItemField" BaseType="TF.ItemField">
+        <NavigationProperty Name="Value" Type="Collection(TF.User)" />
+      </EntityType>
+      <EntityType Name="OptionsItemField" BaseType="TF.ItemField">
+        <NavigationProperty Name="Value" Type="Collection(TF.Option)" ContainsTarget="true" />
+      </EntityType>
+      <EntityType Name="CustomItemField" BaseType="TF.ItemField" />
+      <EntityType Name="DataListItemField" BaseType="TF.ItemField" />
+      <EntityType Name="GenericDataListItemField" BaseType="TF.ItemField" />
+      <EntityType Name="LongTextItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="BigTextItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="RtfTextItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="TitleItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="OptionBoxItemField" BaseType="TF.ItemField">
+        <NavigationProperty Name="Value" Type="TF.Option" />
+      </EntityType>
+      <EntityType Name="ToggleItemField" BaseType="TF.ItemField">
+        <NavigationProperty Name="Value" Type="TF.Option" />
+      </EntityType>
+      <EntityType Name="MapItemField" BaseType="TF.ItemField" />
+      <EntityType Name="DataGridItemField" BaseType="TF.ItemField" />
+      <EntityType Name="InformativeItemField" BaseType="TF.ItemField" />
+      <EntityType Name="ExplanatoryItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="TabItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.Boolean" />
+      </EntityType>
+      <EntityType Name="GroupingItemField" BaseType="TF.ItemField">
+        <Property Name="Value" Type="Edm.Boolean" />
+      </EntityType>
+      <EntityType Name="ButtonItemField" BaseType="TF.ItemField" />
+      <EntityType Name="ActionButtonItemField" BaseType="TF.ItemField" />
+      <EntityType Name="ChildItemsItemField" BaseType="TF.ItemField" />
+      <EntityType Name="ItemRelationItemField" BaseType="TF.ItemField" />
+      <EntityType Name="AttachmentItemField" BaseType="TF.ItemField" />
+      <EntityType Name="FormulaParameter">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
+        <Property Name="Label" Type="Edm.String" Nullable="false" />
+        <Property Name="Type" Type="TF.FormulaParameterType" Nullable="false" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Formula" Type="TF.Formula" />
+      </EntityType>
+      <EntityType Name="TextFormulaParameter" BaseType="TF.FormulaParameter">
+        <Property Name="DefaultValue" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="NumberFormulaParameter" BaseType="TF.FormulaParameter">
+        <Property Name="DefaultValue" Type="Edm.Decimal" Scale="Variable" />
+      </EntityType>
+      <EntityType Name="BoolFormulaParameter" BaseType="TF.FormulaParameter">
+        <Property Name="DefaultValue" Type="Edm.Boolean" />
+      </EntityType>
+      <EntityType Name="DateFormulaParameter" BaseType="TF.FormulaParameter">
+        <Property Name="DefaultValue" Type="Edm.DateTimeOffset" />
+      </EntityType>
+      <EntityType Name="EntityFormulaParameter" BaseType="TF.FormulaParameter">
+        <Property Name="DefaultValue" Type="TF.IDataApiEntity" />
+      </EntityType>
+      <EntityType Name="EntitiesFormulaParameter" BaseType="TF.FormulaParameter">
+        <Property Name="DefaultValue" Type="Collection(TF.IDataApiEntity)" />
+      </EntityType>
+      <ComplexType Name="IActionResult" Abstract="true" />
+      <EntityType Name="ConceptViewFieldComponent" BaseType="TF.ConceptViewComponent">
+        <NavigationProperty Name="Field" Type="TF.ConceptField" />
+      </EntityType>
+      <EntityType Name="GenericOptionFieldDefinition" BaseType="TF.FieldDefinition" Abstract="true">
+        <NavigationProperty Name="AvailableValues" Type="Collection(TF.Option)" />
+      </EntityType>
+      <EntityType Name="OptionFieldDefinition" BaseType="TF.GenericOptionFieldDefinition" />
+      <EntityType Name="OptionsFieldDefinition" BaseType="TF.GenericOptionFieldDefinition" />
+      <EntityType Name="OptionBoxFieldDefinition" BaseType="TF.GenericOptionFieldDefinition" />
+      <EntityType Name="ToggleFieldDefinition" BaseType="TF.GenericOptionFieldDefinition" />
+      <EntityType Name="TextFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="NumberFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="BoolFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="DateFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="TimeFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="LocationFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="AnswerFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="SignatureFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="ItemFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="UserFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="ItemsFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="UsersFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="CustomFieldFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="DataListFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="GenericDataListFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="LongTextFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="BigTextFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="RtfTextFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="MapFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="DataGridFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="InformativeFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="ExplanatoryFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="TabFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="GroupingFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="ButtonFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="ActionButtonFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="ChildItemsFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="ItemRelationFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="AttachmentFieldDefinition" BaseType="TF.FieldDefinition" />
+      <EntityType Name="ConceptViewGroupingComponent" BaseType="TF.ConceptViewComponent">
+        <Property Name="Type" Type="TF.GroupingType" Nullable="false" />
+      </EntityType>
+      <ComplexType Name="ItemFieldUISettings">
+        <Property Name="IsHidden" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsShownAsReadOnly" Type="Edm.Boolean" Nullable="false" />
+      </ComplexType>
+      <EntityType Name="ItemViewFieldComponent" BaseType="TF.ItemViewComponent">
+        <NavigationProperty Name="Field" Type="TF.ItemField" />
+      </EntityType>
+      <EntityType Name="ItemViewGroupingComponent" BaseType="TF.ItemViewComponent">
+        <NavigationProperty Name="Components" Type="Collection(TF.ItemViewComponent)" />
+      </EntityType>
+      <ComplexType Name="Location">
+        <Property Name="Loc" Type="Edm.GeographyPoint" />
+        <Property Name="CustomMapMarkerCode" Type="Edm.String" />
+        <Property Name="DefaultMapMarkerColor" Type="Edm.String" />
+        <Property Name="Accuracy" Type="Edm.Int32" />
+      </ComplexType>
+      <ComplexType Name="IDataApiEntity" Abstract="true" />
+      <EnumType Name="OrganizationUnitType">
+        <Member Name="Customer" Value="1" />
+        <Member Name="InternalOrganizationUnit" Value="2" />
+        <Member Name="ExternalOrganizationUnit" Value="3" />
+        <Member Name="Supplier" Value="4" />
+        <Member Name="Subcontractor" Value="5" />
+        <Member Name="LegalCompany" Value="6" />
+      </EnumType>
+      <EnumType Name="ConceptType">
+        <Member Name="Objective" Value="1" />
+        <Member Name="Strategy" Value="2" />
+        <Member Name="Mission" Value="4" />
+        <Member Name="Action" Value="5" />
+        <Member Name="Issue" Value="6" />
+        <Member Name="Risk" Value="7" />
+        <Member Name="Project" Value="8" />
+        <Member Name="Meeting" Value="9" />
+        <Member Name="BusinessProcess" Value="10" />
+        <Member Name="Bug" Value="11" />
+        <Member Name="ChangeRequest" Value="12" />
+        <Member Name="Wiki" Value="13" />
+        <Member Name="Audit" Value="14" />
+        <Member Name="AuditTopic" Value="15" />
+        <Member Name="AuditQuestion" Value="16" />
+      </EnumType>
+      <EnumType Name="FormulaType">
+        <Member Name="IndicatorCalculationMacro" Value="1" />
+        <Member Name="ConsolidationMacro" Value="2" />
+        <Member Name="SourceFormulaMacro" Value="3" />
+        <Member Name="LibraryFunction" Value="4" />
+        <Member Name="DataTransformationMacro" Value="5" />
+        <Member Name="AlertMacro" Value="6" />
+        <Member Name="AdministrationMacro" Value="7" />
+        <Member Name="CustomItemScriptMacro" Value="8" />
+        <Member Name="WorkspaceCreationScript" Value="9" />
+        <Member Name="ReportScripts" Value="10" />
+        <Member Name="FieldScriptMacro" Value="11" />
+        <Member Name="LogonScript" Value="12" />
+        <Member Name="SearchScript" Value="13" />
+        <Member Name="UserScript" Value="14" />
+        <Member Name="DataGridScript" Value="15" />
+        <Member Name="TextSuggestions" Value="16" />
+      </EnumType>
+      <EnumType Name="FormulaParameterType">
+        <Member Name="Nothing" Value="0" />
+        <Member Name="Text" Value="1" />
+        <Member Name="Number" Value="2" />
+        <Member Name="Checkbox" Value="3" />
+        <Member Name="List" Value="4" />
+        <Member Name="Workspace" Value="5" />
+        <Member Name="Priority" Value="6" />
+        <Member Name="Tag" Value="7" />
+        <Member Name="Date" Value="8" />
+        <Member Name="Person" Value="9" />
+        <Member Name="Status" Value="10" />
+        <Member Name="BillType" Value="11" />
+        <Member Name="SourceOrganizationUnit" Value="12" />
+        <Member Name="TargetOrganizationUnit" Value="13" />
+        <Member Name="MultiPerson" Value="14" />
+        <Member Name="WorkspaceList" Value="15" />
+        <Member Name="MonthYear" Value="16" />
+        <Member Name="TimesheetOrgUnit" Value="17" />
+        <Member Name="Resolution" Value="19" />
+        <Member Name="TextArea" Value="20" />
+        <Member Name="FileUpload" Value="21" />
+        <Member Name="SolutionApplicationVersion" Value="22" />
+        <Member Name="RadioButton" Value="23" />
+        <Member Name="Combobox" Value="24" />
+        <Member Name="MultiSelectCombo" Value="25" />
+        <Member Name="TimesheetSourceOrgUnit" Value="26" />
+        <Member Name="Password" Value="27" />
+        <Member Name="MultiFileUpload" Value="28" />
+        <Member Name="ItemPicker" Value="29" />
+        <Member Name="MultiItemPicker" Value="30" />
+      </EnumType>
+      <EnumType Name="ApplicationPart" IsFlags="true">
+        <Member Name="None" Value="0" />
+        <Member Name="Web" Value="1" />
+        <Member Name="Mobile" Value="2" />
+      </EnumType>
+      <EnumType Name="GroupingType">
+        <Member Name="Tab" Value="0" />
+        <Member Name="Section" Value="1" />
+      </EnumType>
+      <Function Name="BuildAll" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Collection(TF.Formula)" />
+        <Parameter Name="ActiveOnly" Type="Edm.Boolean" Nullable="false" />
+        <Parameter Name="SingleDll" Type="Edm.Boolean" Nullable="false" />
+        <ReturnType Type="TF.IActionResult" />
+      </Function>
+      <Function Name="Current" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Collection(TF.User)" />
+        <ReturnType Type="TF.User" />
+      </Function>
+      <EntityContainer Name="Container">
+        <EntitySet Name="Attachments" EntityType="TF.Attachment">
+          <NavigationPropertyBinding Path="Creator" Target="Users" />
+          <NavigationPropertyBinding Path="Item" Target="Items" />
+          <NavigationPropertyBinding Path="LastModifier" Target="Users" />
+        </EntitySet>
+        <EntitySet Name="Concepts" EntityType="TF.Concept">
+          <NavigationPropertyBinding Path="Creator" Target="Users" />
+          <NavigationPropertyBinding Path="DefaultChild" Target="Concepts" />
+          <NavigationPropertyBinding Path="Fields" Target="ConceptFields" />
+          <NavigationPropertyBinding Path="LastModifier" Target="Users" />
+          <NavigationPropertyBinding Path="Views" Target="ConceptViews" />
+          <NavigationPropertyBinding Path="Workspace" Target="Workspaces" />
+        </EntitySet>
+        <EntitySet Name="ConceptFields" EntityType="TF.ConceptField">
+          <NavigationPropertyBinding Path="Concept" Target="Concepts" />
+          <NavigationPropertyBinding Path="FieldDefinition" Target="FieldDefinitions" />
+          <NavigationPropertyBinding Path="TF.ItemConceptField/DefaultValue" Target="Items" />
+          <NavigationPropertyBinding Path="TF.ItemsConceptField/DefaultValue" Target="Items" />
+          <NavigationPropertyBinding Path="TF.OptionBoxConceptField/DefaultValue" Target="Options" />
+          <NavigationPropertyBinding Path="TF.OptionConceptField/DefaultValue" Target="Options" />
+          <NavigationPropertyBinding Path="TF.OptionsConceptField/DefaultValue" Target="Options" />
+          <NavigationPropertyBinding Path="TF.ToggleConceptField/DefaultValue" Target="Options" />
+          <NavigationPropertyBinding Path="TF.UserConceptField/DefaultValue" Target="Users" />
+          <NavigationPropertyBinding Path="TF.UsersConceptField/DefaultValue" Target="Users" />
+        </EntitySet>
+        <EntitySet Name="ConceptViewComponents" EntityType="TF.ConceptViewComponent">
+          <NavigationPropertyBinding Path="Concept" Target="Concepts" />
+          <NavigationPropertyBinding Path="TF.ConceptViewFieldComponent/Field" Target="ConceptFields" />
+          <NavigationPropertyBinding Path="View" Target="ConceptViews" />
+        </EntitySet>
+        <EntitySet Name="ConceptViews" EntityType="TF.ConceptView">
+          <NavigationPropertyBinding Path="Components" Target="ConceptViewComponents" />
+          <NavigationPropertyBinding Path="Concept" Target="Concepts" />
+        </EntitySet>
+        <EntitySet Name="FieldDefinitions" EntityType="TF.FieldDefinition">
+          <NavigationPropertyBinding Path="Group" Target="FieldDefinitionGroups" />
+          <NavigationPropertyBinding Path="TF.GenericOptionFieldDefinition/AvailableValues" Target="Options" />
+        </EntitySet>
+        <EntitySet Name="FieldDefinitionGroups" EntityType="TF.FieldDefinitionGroup">
+          <NavigationPropertyBinding Path="FieldDefinitions" Target="FieldDefinitions" />
+        </EntitySet>
+        <EntitySet Name="Formulas" EntityType="TF.Formula" />
+        <EntitySet Name="Functions" EntityType="TF.Function" />
+        <EntitySet Name="Items" EntityType="TF.Item">
+          <NavigationPropertyBinding Path="Attachments" Target="Attachments" />
+          <NavigationPropertyBinding Path="Concept" Target="Concepts" />
+          <NavigationPropertyBinding Path="Creator" Target="Users" />
+          <NavigationPropertyBinding Path="Fields" Target="ItemFields" />
+          <NavigationPropertyBinding Path="LastModifier" Target="Users" />
+          <NavigationPropertyBinding Path="Views" Target="ItemViews" />
+        </EntitySet>
+        <EntitySet Name="ItemFields" EntityType="TF.ItemField">
+          <NavigationPropertyBinding Path="FieldDefinition" Target="FieldDefinitions" />
+          <NavigationPropertyBinding Path="Item" Target="Items" />
+          <NavigationPropertyBinding Path="TF.ItemMultiSelectItemField/Value" Target="Items" />
+          <NavigationPropertyBinding Path="TF.ItemSelectItemField/Value" Target="Items" />
+          <NavigationPropertyBinding Path="TF.OptionBoxItemField/Value" Target="Options" />
+          <NavigationPropertyBinding Path="TF.ToggleItemField/Value" Target="Options" />
+          <NavigationPropertyBinding Path="TF.UserItemField/Value" Target="Users" />
+          <NavigationPropertyBinding Path="TF.UsersItemField/Value" Target="Users" />
+        </EntitySet>
+        <EntitySet Name="ItemViewComponents" EntityType="TF.ItemViewComponent">
+          <NavigationPropertyBinding Path="ComponentDefinition" Target="ConceptViewComponents" />
+          <NavigationPropertyBinding Path="Item" Target="Items" />
+          <NavigationPropertyBinding Path="TF.ItemViewFieldComponent/Field" Target="ItemFields" />
+          <NavigationPropertyBinding Path="TF.ItemViewGroupingComponent/Components" Target="ItemViewComponents" />
+          <NavigationPropertyBinding Path="View" Target="ItemViews" />
+        </EntitySet>
+        <EntitySet Name="ItemViews" EntityType="TF.ItemView">
+          <NavigationPropertyBinding Path="Components" Target="ItemViewComponents" />
+          <NavigationPropertyBinding Path="Item" Target="Items" />
+        </EntitySet>
+        <EntitySet Name="ItemStatuses" EntityType="TF.ItemStatus" />
+        <EntitySet Name="Locales" EntityType="TF.Locale" />
+        <EntitySet Name="Options" EntityType="TF.Option">
+          <NavigationPropertyBinding Path="FieldDefinition" Target="FieldDefinitions" />
+        </EntitySet>
+        <EntitySet Name="OrganizationUnits" EntityType="TF.OrganizationUnit">
+          <NavigationPropertyBinding Path="Manager" Target="Users" />
+        </EntitySet>
+        <EntitySet Name="Shortcuts" EntityType="TF.Shortcut">
+          <NavigationPropertyBinding Path="Workspace" Target="Workspaces" />
+        </EntitySet>
+        <EntitySet Name="Users" EntityType="TF.User">
+          <NavigationPropertyBinding Path="Function" Target="Functions" />
+          <NavigationPropertyBinding Path="Language" Target="Locales" />
+          <NavigationPropertyBinding Path="OrganizationUnit" Target="OrganizationUnits" />
+          <NavigationPropertyBinding Path="RegionalFormat" Target="Locales" />
+        </EntitySet>
+        <EntitySet Name="UserGroups" EntityType="TF.UserGroup">
+          <NavigationPropertyBinding Path="Creator" Target="Users" />
+          <NavigationPropertyBinding Path="LastModifier" Target="Users" />
+          <NavigationPropertyBinding Path="Template" Target="UserGroups" />
+          <NavigationPropertyBinding Path="Users" Target="Users" />
+        </EntitySet>
+        <EntitySet Name="Workspaces" EntityType="TF.Workspace">
+          <NavigationPropertyBinding Path="Concepts" Target="Concepts" />
+          <NavigationPropertyBinding Path="Creator" Target="Users" />
+          <NavigationPropertyBinding Path="Instances" Target="Workspaces" />
+          <NavigationPropertyBinding Path="LastModifier" Target="Users" />
+          <NavigationPropertyBinding Path="Shortcuts" Target="Shortcuts" />
+          <NavigationPropertyBinding Path="Template" Target="Workspaces" />
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
