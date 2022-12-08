@@ -17,6 +17,7 @@ namespace SandboxODataTests
         private readonly bool _authenticate;
 
         public IODataRequestMessage? Request { get; private set; }
+        public Descriptor? Descriptor { get; private set; }
         public string? Content { get; private set; }
 
         public Context(ITestOutputHelper output, bool authenticate = true) : base(ServiceUri)
@@ -40,11 +41,12 @@ namespace SandboxODataTests
                 WriteLine($"Entity = {descriptor.Entity}");
             }
             Request = e.RequestMessage;
+            Descriptor = e.Descriptor;
         }
 
-        void IDataServiceContextEvents.InspectContentStream(Descriptor descriptor, Stream stream)
+        void IDataServiceContextEvents.InspectContentStream(Stream stream)
         {
-            if (stream == null || !stream.CanSeek)
+            if (stream == null || !stream.CanRead || !stream.CanSeek)
                 return;
             var position = stream.Position;
             stream.Seek(0, SeekOrigin.Begin);
