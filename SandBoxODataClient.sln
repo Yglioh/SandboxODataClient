@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{436D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft", "Microsoft", "{20B81013-37EF-46A7-9E34-349D4ABF2FD1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBoxODataClient", "src\SandBoxODataClient\SandBoxODataClient.csproj", "{395FF53E-9F39-4960-BB56-18D60227DBCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandboxODataClient", "src\SandBoxODataClient\SandboxODataClient.csproj", "{395FF53E-9F39-4960-BB56-18D60227DBCE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client", "submodules\odata.net\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj", "{E1A4E1FC-F751-4B83-803A-7A69E0A1A8F5}"
 EndProject

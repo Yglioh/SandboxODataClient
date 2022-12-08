@@ -22,7 +22,7 @@
     },
     "GeneratedFileNamePrefix": "Container",
     "UseNamespacePrefix": false,
-    "NamespacePrefix": "Tenforce.OData.Client",
+    "NamespacePrefix": "Sandbox.OData.Client",
     "UseDataServiceCollection": true,
     "MakeTypesInternal": false,
     "OpenGeneratedFilesInIDE": false,
