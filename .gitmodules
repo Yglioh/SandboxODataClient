@@ -1,0 +1,3 @@
+[submodule "odata.net"]
+	path = submodules/odata.net
+	url = git@github.com:OData/odata.net.git
