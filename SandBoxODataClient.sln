@@ -23,10 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandboxODataTests", "src\Sa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{47BAE357-BBE5-45DF-9911-1503E0EDE2F1}"
 	ProjectSection(SolutionItems) = preProject
-		patches\01.RemoveFramework45.patch = patches\01.RemoveFramework45.patch
-		patches\02.AddContentInspection.patch = patches\02.AddContentInspection.patch
-		patches\Apply.sh = patches\Apply.sh
-		patches\ReadMe.md = patches\ReadMe.md
+		patches\01-remove-framework-45.patch = patches\01-remove-framework-45.patch
+		patches\02-add-payload-inspection.patch = patches\02-add-payload-inspection.patch
+		patches\read-me.md = patches\read-me.md
+		patches\apply.bash = patches\apply.bash
 	EndProjectSection
 EndProject
 Global
