@@ -1,0 +1,65 @@
+From 1a228f3d7263bcd7d4195448353aa9f03c188ef4 Mon Sep 17 00:00:00 2001
+From: Sven Vranckx <sven.vranckx@gmail.com>
+Date: Thu, 8 Dec 2022 12:28:31 +0100
+Subject: [PATCH] Remove .NET framework 4.5 as target
+
+---
+ src/Microsoft.OData.Client/Microsoft.OData.Client.csproj | 2 +-
+ src/Microsoft.OData.Core/Microsoft.OData.Core.csproj     | 2 +-
+ src/Microsoft.OData.Edm/Microsoft.OData.Edm.csproj       | 2 +-
+ src/Microsoft.Spatial/Microsoft.Spatial.csproj           | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/Microsoft.OData.Client/Microsoft.OData.Client.csproj b/src/Microsoft.OData.Client/Microsoft.OData.Client.csproj
+index a855565af..6f1a6f8b9 100644
+--- a/src/Microsoft.OData.Client/Microsoft.OData.Client.csproj
++++ b/src/Microsoft.OData.Client/Microsoft.OData.Client.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net45;netstandard2.0;</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0;</TargetFrameworks>
+     <AssemblyName>Microsoft.OData.Client</AssemblyName>
+     <RootNamespace>Microsoft.OData.Client</RootNamespace>
+     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+diff --git a/src/Microsoft.OData.Core/Microsoft.OData.Core.csproj b/src/Microsoft.OData.Core/Microsoft.OData.Core.csproj
+index 983cc7b8a..05787733b 100644
+--- a/src/Microsoft.OData.Core/Microsoft.OData.Core.csproj
++++ b/src/Microsoft.OData.Core/Microsoft.OData.Core.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFrameworks>net45;netstandard2.0;netstandard1.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0;netstandard1.1;netcoreapp3.1</TargetFrameworks>
+     <AssemblyName>Microsoft.OData.Core</AssemblyName>
+     <RootNamespace>Microsoft.OData.Core</RootNamespace>
+ 
+diff --git a/src/Microsoft.OData.Edm/Microsoft.OData.Edm.csproj b/src/Microsoft.OData.Edm/Microsoft.OData.Edm.csproj
+index 656049f99..97e818acc 100644
+--- a/src/Microsoft.OData.Edm/Microsoft.OData.Edm.csproj
++++ b/src/Microsoft.OData.Edm/Microsoft.OData.Edm.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFrameworks>net45;netstandard2.0;netstandard1.1</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0;netstandard1.1</TargetFrameworks>
+     <AssemblyName>Microsoft.OData.Edm</AssemblyName>
+     <RootNamespace>Microsoft.OData.Edm</RootNamespace>
+     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+diff --git a/src/Microsoft.Spatial/Microsoft.Spatial.csproj b/src/Microsoft.Spatial/Microsoft.Spatial.csproj
+index 1e1fa1312..b39b9961e 100644
+--- a/src/Microsoft.Spatial/Microsoft.Spatial.csproj
++++ b/src/Microsoft.Spatial/Microsoft.Spatial.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net45;netstandard2.0;netstandard1.1</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0;netstandard1.1</TargetFrameworks>
+     <AssemblyName>Microsoft.Spatial</AssemblyName>
+     <RootNamespace>Microsoft.Spatial</RootNamespace>
+ 
+-- 
+2.36.1.windows.1
+
