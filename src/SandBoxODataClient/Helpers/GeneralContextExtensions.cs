@@ -67,7 +67,7 @@ public static class GeneralContextExtensions
         {
             if (!context.Detach(entity.Entity))
             {
-                throw new Exception($"Unable to dettach entity: {entity.SelfLink}");
+                throw new Exception($"Unable to detach entity: {entity.SelfLink}");
             }
         }
     }

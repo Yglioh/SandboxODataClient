@@ -1,7 +1,9 @@
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Microsoft.OData.Client;
 using Sandbox.OData.Client;
 using SandboxODataClient.Helpers;
+using System.Reflection.Emit;
 using Xunit.Abstractions;
 
 namespace SandboxODataTests.Tests
@@ -46,6 +48,92 @@ namespace SandboxODataTests.Tests
             context.AddAndTrackEntity(field);
             field.Concept = concept;
             field.FieldDefinition = definition;
+
+            await context.SaveChangesAsync(SaveChangesOptions.PostOnlySetProperties);
+        }
+
+        [Fact]
+        public async Task CreateDefinitionAndConceptFieldTest()
+        {
+            var context = new Context(_output, true);
+
+            var concept = new Concept { Id = 1 };
+            context.AttachEntity(concept);
+
+            TextFieldDefinition definition = new();
+            context.AddAndTrackEntity(definition);
+            definition.Code = "TextCustomField5";
+            definition.Label = "Text field (custom 5)";
+            definition.IsActive = true;
+            
+            ConceptField field = new();
+            context.AddAndTrackEntity(field);
+            field.Concept = concept;
+            field.FieldDefinition = definition;
+
+            await context.SaveChangesAsync(SaveChangesOptions.PostOnlySetProperties);
+        }
+
+        [Fact(Skip = "Resulting change order is wrong")]
+        public async Task CreateWithDeepInsert1Test()
+        {
+            var context = new Context(_output, false);
+
+            var concept = new Concept { Id = 1 };
+            context.AttachEntity(concept);
+
+            ConceptField field = new();
+            context.AddAndTrackEntity(field);
+
+            field.Concept = concept;
+            field.FieldDefinition = new TextFieldDefinition();
+            field.FieldDefinition.Code = "TextCustomField2";
+            field.FieldDefinition.Label = "Text field (custom 2)";
+            field.FieldDefinition.IsActive = true;
+
+            await context.SaveChangesAsync(SaveChangesOptions.PostOnlySetProperties);
+        }
+
+        [Fact]
+        public async Task CreateWithDeepInsert2Test()
+        {
+            var context = new Context(_output, false);
+
+            var concept = new Concept { Id = 1 };
+            context.AttachEntity(concept);
+
+            ConceptField field = new();
+            context.AddAndTrackEntity(field);
+
+            field.Concept = concept;
+            field.FieldDefinition = new TextFieldDefinition();
+            field.FieldDefinition.Code = "TextCustomField3";
+            field.FieldDefinition.Label = "Text field (custom 3)";
+            field.FieldDefinition.IsActive = true;
+
+            context.Detach(field);
+            context.AddEntity(field);
+            context.SetLink(field, nameof(ConceptField.Concept), concept);
+            context.SetLink(field, nameof(ConceptField.FieldDefinition), field.FieldDefinition);
+
+            await context.SaveChangesAsync(SaveChangesOptions.PostOnlySetProperties);
+        }
+
+        [Fact]
+        public async Task CreateWithDeepInsert3Test()
+        {
+            var context = new Context(_output, false);
+
+            var concept = new Concept { Id = 1 };
+            context.AttachEntity(concept);
+
+            ConceptField field = new();
+            context.AddAndTrackEntity(field);
+            field.Concept = concept;
+            field.FieldDefinition = new TextFieldDefinition();
+            field.FieldDefinition.Code = "TextCustomField4";
+            field.FieldDefinition.Label = "Text field (custom 4)";
+            field.FieldDefinition.IsActive = true;
 
             await context.SaveChangesAsync(SaveChangesOptions.PostOnlySetProperties);
         }
