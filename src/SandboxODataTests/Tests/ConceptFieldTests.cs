@@ -53,6 +53,36 @@ namespace SandboxODataTests.Tests
         }
 
         [Fact]
+        public async Task CreateConceptStandardFieldTest()
+        {
+            var context = new Context(_output, false);
+
+            ConceptField conceptField = new();
+            context.AddAndTrackEntity(conceptField);
+            conceptField.ConceptId = 1;
+            conceptField.FieldDefinitionId = "SF23";
+
+            await context.SaveChangesAsync(SaveChangesOptions.PostOnlySetProperties);
+        }
+
+        [Fact]
+        public async Task CreateConceptStandardFieldUsingNavigationTest()
+        {
+            var context = new Context(_output, false);
+
+            ConceptField conceptField = new();
+            context.AddAndTrackEntity(conceptField);
+
+            conceptField.Concept = new Concept { Id = 1 };
+            conceptField.FieldDefinition = new FieldDefinition { Id = "SF23" };
+
+            context.AddRelatedObject(conceptField, nameof(ConceptField.Concept), conceptField.Concept);
+            context.AddRelatedObject(conceptField, nameof(ConceptField.FieldDefinition), conceptField.FieldDefinition);
+
+            await context.SaveChangesAsync(SaveChangesOptions.PostOnlySetProperties);
+        }
+
+        [Fact]
         public async Task CreateDefinitionAndConceptFieldTest()
         {
             var context = new Context(_output, true);
