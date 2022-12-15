@@ -4,7 +4,7 @@ using Sandbox.OData.Client;
 using SandboxODataClient.Helpers;
 using Xunit.Abstractions;
 
-namespace SandboxODataTests
+namespace SandboxODataTests.Tests
 {
     public class WorkspaceTests
     {

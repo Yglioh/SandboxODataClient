@@ -14,23 +14,24 @@ namespace SandboxODataTests
         private const string BearerToken = @"5CgW6F7EZauAMKl90k4LbFeWQLRcxvAbZChWJIXDEg7N4zEv927NU7GQSxChOqs5KsMwOEK7MKy1R2wFGaQIEnnkvGlVg4lZwMHn4a45NZfdNB2h6sOrjO3VQcz/MQrUWT4JtKYHrFo=";
 
         private readonly ITestOutputHelper _output;
-        private readonly bool _authenticate;
 
         public IODataRequestMessage? Request { get; private set; }
         public Descriptor? Descriptor { get; private set; }
         public string? Content { get; private set; }
 
+        public bool Authenticate { get; set; }
+
         public Context(ITestOutputHelper output, bool authenticate = true) : base(ServiceUri)
         {
             _output = output;
-            _authenticate = authenticate;
+            Authenticate = authenticate;
             MergeOption = MergeOption.NoTracking; // Needed to have nested expand properties filled in
             SendingRequest2 += OnSendingRequest;
         }
 
         private void OnSendingRequest(object? sender, SendingRequest2EventArgs e)
         {
-            if (_authenticate)
+            if (Authenticate)
                 e.RequestMessage.SetHeader("Authorization", $"Bearer {BearerToken}");
             var message = e.RequestMessage;
             WriteLine($"HTTP {message.Method} {message.Url}");
@@ -57,6 +58,10 @@ namespace SandboxODataTests
                 var json = token.ToString(Formatting.Indented);                
                 WriteLine($"Content =\n{json}");
                 Content = json;
+#if DEBUG
+                if (Debugger.IsAttached)
+                    Debugger.Break();
+#endif
             }
             stream.Seek(position, SeekOrigin.Begin);
         }
