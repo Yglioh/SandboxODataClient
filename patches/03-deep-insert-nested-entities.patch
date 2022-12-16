@@ -1,0 +1,166 @@
+From e90ff96cfe59ef4dd6ca2ac96620477322f863ed Mon Sep 17 00:00:00 2001
+From: Sven Vranckx <sven.vranckx@gmail.com>
+Date: Fri, 16 Dec 2022 16:29:06 +0100
+Subject: [PATCH] Implement deep insert for nested entities
+
+---
+ .../Binding/BindingObserver.cs                | 15 +++++++
+ .../DataServiceContext.cs                     |  2 +-
+ .../netstandard2.0/PublicAPI.Unshipped.txt    |  2 +-
+ .../SaveChangesOptions.cs                     |  8 +++-
+ .../Serialization/ODataPropertyConverter.cs   | 40 +++++++++++++++++++
+ .../Serialization/Serializer.cs               | 14 +++++++
+ 6 files changed, 78 insertions(+), 3 deletions(-)
+
+diff --git a/src/Microsoft.OData.Client/Binding/BindingObserver.cs b/src/Microsoft.OData.Client/Binding/BindingObserver.cs
+index 5bcc73753..aa1ca1ce5 100644
+--- a/src/Microsoft.OData.Client/Binding/BindingObserver.cs
++++ b/src/Microsoft.OData.Client/Binding/BindingObserver.cs
+@@ -252,6 +252,21 @@ namespace Microsoft.OData.Client
+                                 break;
+ 
+                             case BindingPropertyKind.Entity:
++                                var options = this.Context.SaveChangesDefaultOptions;
++                                if (options.HasFlag(SaveChangesOptions.DeepInsertEntityProperties))
++                                {
++                                    // Do not use deep insert for property values that are already
++                                    // tracked by the context
++                                    var descriptor = this.Context.GetEntityDescriptor(sourcePropertyValue);
++                                    if (descriptor == null)
++                                    {
++                                        this.HandleUpdateEntity(
++                                                source,
++                                                sourceProperty,
++                                                sourcePropertyValue);
++                                        break;
++                                    }
++                                }
+                                 // Add the newly added entity to the graph, or update entity reference.
+                                 this.bindingGraph.AddEntity(
+                                         source,
+diff --git a/src/Microsoft.OData.Client/DataServiceContext.cs b/src/Microsoft.OData.Client/DataServiceContext.cs
+index a9d6ae730..00839c770 100644
+--- a/src/Microsoft.OData.Client/DataServiceContext.cs
++++ b/src/Microsoft.OData.Client/DataServiceContext.cs
+@@ -3518,7 +3518,7 @@ namespace Microsoft.OData.Client
+         /// <param name="options">options as specified by the user.</param>
+         private void ValidateSaveChangesOptions(SaveChangesOptions options)
+         {
+-            const SaveChangesOptions All = SaveChangesOptions.ContinueOnError | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ReplaceOnUpdate | SaveChangesOptions.PostOnlySetProperties | SaveChangesOptions.UseRelativeUri | SaveChangesOptions.UseJsonBatch;
++            const SaveChangesOptions All = SaveChangesOptions.ContinueOnError | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ReplaceOnUpdate | SaveChangesOptions.PostOnlySetProperties | SaveChangesOptions.UseRelativeUri | SaveChangesOptions.UseJsonBatch | SaveChangesOptions.DeepInsertEntityProperties;
+ 
+             // Make sure no higher order bits are set.
+             if ((options | All) != All)
+diff --git a/src/Microsoft.OData.Client/PublicAPI/netstandard2.0/PublicAPI.Unshipped.txt b/src/Microsoft.OData.Client/PublicAPI/netstandard2.0/PublicAPI.Unshipped.txt
+index 5f282702b..9cb3248e0 100644
+--- a/src/Microsoft.OData.Client/PublicAPI/netstandard2.0/PublicAPI.Unshipped.txt
++++ b/src/Microsoft.OData.Client/PublicAPI/netstandard2.0/PublicAPI.Unshipped.txt
+@@ -1 +1 @@
+-﻿
+\ No newline at end of file
++﻿Microsoft.OData.Client.SaveChangesOptions.DeepInsertEntityProperties = 128 -> Microsoft.OData.Client.SaveChangesOptions
+\ No newline at end of file
+diff --git a/src/Microsoft.OData.Client/SaveChangesOptions.cs b/src/Microsoft.OData.Client/SaveChangesOptions.cs
+index 3a487ab66..3ee9cae35 100644
+--- a/src/Microsoft.OData.Client/SaveChangesOptions.cs
++++ b/src/Microsoft.OData.Client/SaveChangesOptions.cs
+@@ -45,6 +45,12 @@ namespace Microsoft.OData.Client
+         /// Allow usage of Json in batch requests.
+         /// Note it can only be used in a batch request.
+         /// </summary>
+-        UseJsonBatch = 64
++        UseJsonBatch = 64,
++
++        /// <summary>
++        /// Use deep insert for properties that are an entity and that are being created
++        /// as part of a new parent entity
++        /// </summary>
++        DeepInsertEntityProperties = 128,
+     }
+ }
+diff --git a/src/Microsoft.OData.Client/Serialization/ODataPropertyConverter.cs b/src/Microsoft.OData.Client/Serialization/ODataPropertyConverter.cs
+index 21869d4fc..1547a7278 100644
+--- a/src/Microsoft.OData.Client/Serialization/ODataPropertyConverter.cs
++++ b/src/Microsoft.OData.Client/Serialization/ODataPropertyConverter.cs
+@@ -224,6 +224,46 @@ namespace Microsoft.OData.Client
+             return odataNestedResourceInfoWrappers;
+         }
+ 
++        internal IEnumerable<ODataNestedResourceInfoWrapper> PopulateNestedEntityProperties(object parentObject, string serverTypeName, IEnumerable<ClientPropertyAnnotation> properties, HashSet<object> visitedComplexTypeObjects)
++        {
++            Debug.Assert(properties != null, "properties != null");
++
++            List<ODataNestedResourceInfoWrapper> odataNestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>();
++            var populatedProperties = properties.Where(p => !p.IsComplex && !p.IsComplexCollection);
++
++            foreach (ClientPropertyAnnotation property in populatedProperties)
++            {
++                object instance = property.GetValue(parentObject);
++                ClientEdmModel model = this.requestInfo.Model;
++                ClientTypeAnnotation complexTypeAnnotation = model.GetClientTypeAnnotation(property.PropertyType);
++                ODataResource resource = new ODataResource
++                {
++                    TypeName = complexTypeAnnotation.ElementTypeName,
++                    TypeAnnotation = new ODataTypeAnnotation(serverTypeName),
++                    Properties = this.PopulateProperties(instance, serverTypeName, complexTypeAnnotation.PropertiesToSerialize(), visitedComplexTypeObjects)
++                };
++
++                var wrapper = new ODataResourceWrapper()
++                {
++                    Resource = resource,
++                    Instance = instance,
++                    NestedResourceInfoWrappers = this.PopulateNestedComplexProperties(instance, serverTypeName, complexTypeAnnotation.PropertiesToSerialize(), visitedComplexTypeObjects)
++                };
++
++                odataNestedResourceInfoWrappers.Add(new ODataNestedResourceInfoWrapper
++                {
++                    NestedResourceInfo = new ODataNestedResourceInfo()
++                    {
++                        Name = property.PropertyName,
++                        IsCollection = false
++                    },
++                    NestedResourceOrResourceSet = wrapper
++                });
++            }
++
++            return odataNestedResourceInfoWrappers;
++        }
++
+         /// <summary>
+         /// Populates list of odata properties with complex dynamic properties in the container property
+         /// </summary>
+diff --git a/src/Microsoft.OData.Client/Serialization/Serializer.cs b/src/Microsoft.OData.Client/Serialization/Serializer.cs
+index 59475d2c5..796b4376f 100644
+--- a/src/Microsoft.OData.Client/Serialization/Serializer.cs
++++ b/src/Microsoft.OData.Client/Serialization/Serializer.cs
+@@ -315,6 +315,8 @@ namespace Microsoft.OData.Client
+                 if (EntityStates.Added == entityDescriptor.State)
+                 {
+                     this.WriteNestedResourceInfo(entityDescriptor, relatedLinks, entryWriter);
++                    if (this.options.HasFlag(SaveChangesOptions.DeepInsertEntityProperties))
++                        this.WriteNestedEntityProperties(entityDescriptor.Entity, serverTypeName, properties, entryWriter);
+                 }
+ 
+                 entryWriter.WriteEnd(entry, entityDescriptor.Entity);
+@@ -340,6 +342,18 @@ namespace Microsoft.OData.Client
+             }
+         }
+ 
++        internal void WriteNestedEntityProperties(object entity, string serverTypeName, IEnumerable<ClientPropertyAnnotation> properties, ODataWriterWrapper odataWriter)
++        {
++            Debug.Assert(properties != null, "properties != null");
++            var populatedProperties = properties.Where(p => !p.IsComplex && !p.IsComplexCollection);
++
++            var nestedComplexProperties = this.propertyConverter.PopulateNestedEntityProperties(entity, serverTypeName, populatedProperties, null);
++            foreach (var property in nestedComplexProperties)
++            {
++                WriteNestedResourceInfo(odataWriter, property);
++            }
++        }
++
+         /// <summary>
+         /// Writes a navigation link.
+         /// </summary>
+-- 
+2.36.1.windows.1
+

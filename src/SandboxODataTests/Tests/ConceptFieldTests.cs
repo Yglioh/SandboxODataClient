@@ -153,6 +153,7 @@ namespace SandboxODataTests.Tests
         public async Task CreateWithDeepInsert3Test()
         {
             var context = new Context(_output, false);
+            context.SaveChangesDefaultOptions = SaveChangesOptions.DeepInsertEntityProperties;
 
             var concept = new Concept { Id = 1 };
             context.AttachEntity(concept);
@@ -165,7 +166,7 @@ namespace SandboxODataTests.Tests
             field.FieldDefinition.Label = "Text field (custom 4)";
             field.FieldDefinition.IsActive = true;
 
-            await context.SaveChangesAsync(SaveChangesOptions.PostOnlySetProperties);
+            await context.SaveChangesAsync(SaveChangesOptions.PostOnlySetProperties | SaveChangesOptions.DeepInsertEntityProperties);
         }
     }
 }
